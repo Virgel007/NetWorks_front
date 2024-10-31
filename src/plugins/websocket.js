@@ -1,6 +1,3 @@
-// import router from "@/router";
-// import store from "@/store";
-
 export default {
   install(app) {
     let socket;
@@ -10,15 +7,9 @@ export default {
         console.log(serverUrl);
         socket = new WebSocket(serverUrl);
         console.log('function connect');
+
         socket.onopen = () => {
           console.log('Websocket connected...');
-          // const connectObject = {
-          //   token,
-          //   type: 'Connect',
-          //   text: 'Hello, server!',
-          // };
-          // let connectMessage = JSON.stringify(connectObject);
-          // socket.send(token);
         };
 
         socket.onmessage = (event) => {
@@ -26,51 +17,20 @@ export default {
             type: 'none'
           };
           let msg = event.data;
-          // let msg = JSON.stringify(event.data);
 
           try {
             serverMessage = JSON.parse(msg);
-            //somthing strange, it throws error but parses to json
             console.log(serverMessage);
           } catch (e) {
             console.log({ e });
           }
-          //  { type: "online", status: true, userId: "" }
-          // real time online decision
-          // if (serverMessage.type === "ONLINE") {
-          //   const currentRoute = router.history.current;
-          //   // console.log(router.history.current);
-          //   const routeName = currentRoute.name;
-          //   console.log(serverMessage.userId, currentRoute.params.id);
-          //   if (
-          //     routeName === "ProfileId" &&
-          //     serverMessage.userId === currentRoute.params.id
-          //   ) {
-          //     // update profile online status profileId
-          //     let newInfo = {};
-          //     let userInfo = store.getters["users/info/getUsersInfo"];
-          //     console.log(userInfo, userInfo.is_onlined, serverMessage.status);
-          //     if (userInfo && userInfo.id) {
-          //       newInfo = Object.assign({}, userInfo, {
-          //         is_onlined: serverMessage.status,
-          //       });
-          //       console.log(newInfo, store.commit);
-          //       store.commit("users/info/setUsersInfo", newInfo);
-          //     }
-          //
-          //     // console.log(store.getters["users/info/getInfo"]);
-          //   }
-          //   if (routeName === "Im") {
-          //     console.log("update profile online status in messages");
-          //   }
-          // }
         };
 
-socket.onerror = (e) => {
-  console.log('connect error!!', e);
-  console.log('Error code:', e.code);
-  console.log('Error message:', e.message);
-};
+        socket.onerror = (e) => {
+          console.log('connect error!!', e);
+          console.log('Error code:', e.code);
+          console.log('Error message:', e.message);
+        };
 
         socket.onclose = (e) => {
           console.log(`[close] Соединение закрыто чисто, код = ${e.code}, причина = ${e.reason}`, e);
@@ -78,12 +38,16 @@ socket.onerror = (e) => {
             this.connect(); // Попытка повторного подключения через 5 секунд
           }, 5000);
         };
-
+      },
 
       sendMessage(payload) {
         const message = JSON.stringify(payload);
         console.log(message);
-        socket.send(message);
+        if (socket && socket.readyState === WebSocket.OPEN) {
+          socket.send(message);
+        } else {
+          console.log('Socket is not open.');
+        }
       },
 
       subscribe(eventType, callback) {
@@ -94,15 +58,16 @@ socket.onerror = (e) => {
           let msg = event.data;
           try {
             serverMessage = JSON.parse(msg);
-            console.log('Сработал в файле websocket.js')
+            console.log('Сработал в файле websocket.js');
             console.log(serverMessage);
           } catch (e) {
             console.log(e);
           }
-          callback(serverMessage); // вызываем переданную колбэк функцию и передаем ей полученное сообщение
+          callback(serverMessage);
         };
-      },
-    }
+      }
+    };
+
     app.config.globalProperties.$socket = socketApi;
-  },
+  }
 };
