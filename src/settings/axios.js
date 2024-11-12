@@ -4,9 +4,9 @@ import store from '@/store';
 
 axios.defaults.headers['content-type'] = 'application/json';
 axios.defaults.withCredentials = true;
-// axios.defaults.baseURL = '/api/v1/';
-axios.defaults.baseURL = "http://79.174.80.223:8085/api/v1/";
-// axios.defaults.baseURL = "http://79.174.80.223:8085";
+axios.defaults.baseURL = '/api/v1/';
+// axios.defaults.baseURL = "http://79.174.80.223:8085/api/v1/";
+// axios.defaults.baseURL = "http://localhost:8085/api/v1/";
 
 
 // const setAuthToken = (token) => {
