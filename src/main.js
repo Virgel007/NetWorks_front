@@ -36,7 +36,7 @@ app
   .use(router)
   .use(store)
   .use(chat, {
-    server: '79.174.80.223'
+    server: 'http://79.174.80.223'
     // server: 'localhost:8080'
   })
   .use(vClickOutside)
