@@ -3,8 +3,8 @@ export default {
     let socket;
     const socketApi = {
       connect() {
-        const serverUrl = 'ws://79.174.80.223:8088/api/v1/streaming/ws';
-        // const serverUrl = 'ws://79.174.80.223:8077/api/v1/streaming/ws';
+        // const serverUrl = 'ws://79.174.80.223:8088/api/v1/streaming/ws';
+        const serverUrl = 'ws://79.174.80.223:8077/api/v1/streaming/ws';
         console.log(serverUrl);
         socket = new WebSocket(serverUrl);
         console.log('function connect');
